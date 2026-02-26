@@ -1,57 +1,66 @@
+import Image from "next/image";
+
 export default function Services() {
-  const services = [
-    { title: "Lorem ipsum", color: "border-amerta-blue" },
-    { title: "Lorem ipsum", color: "border-amerta-teal" },
-    { title: "Lorem ipsum", color: "border-amerta-blue" },
-    { title: "Lorem ipsum", color: "border-amerta-teal" },
+  const serviceList = [
+    { title: "Mobile Development", desc: "Build seamless apps for iOS and Android." },
+    { title: "Web Development", desc: "Scalable and responsive web applications." },
+    { title: "UI/UX Design", desc: "User-centric designs that convert." },
+    { title: "Cloud Solutions", desc: "Safe and scalable cloud infrastructure." },
+    { title: "QA Testing", desc: "Ensuring your product is bug-free." },
   ];
 
   return (
-    <section className="py-24 bg-white">
-      <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-        
-        {/* KOLOM KIRI: Judul & Deskripsi */}
-        <div className="sticky top-32">
-          <h2 className="font-heading text-5xl font-extrabold text-slate-900 leading-tight mb-6">
-            Our Services
-          </h2>
-          <p className="font-body text-slate-600 mb-10 max-w-md leading-relaxed">
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-          </p>
+    <section id="services" className="relative w-full py-24 bg-white overflow-x-clip overflow-y-visible">
+      
+      <div className="amerta-container relative">
+        {/* Grid Utama */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           
-          <button className="flex items-center gap-3 px-8 py-3 bg-gradient-to-r from-amerta-teal to-amerta-blue text-white font-bold rounded-tl-2xl rounded-br-2xl hover:scale-105 transition-all shadow-lg shadow-amerta-teal/20">
-            More Services 
-            <span>→</span>
-          </button>
-        </div>
+          {/* --- KOLOM KIRI (Judul + Supergraphic) --- */}
+          <div className="lg:sticky lg:top-32 gap-6 h-fit flex flex-col items-start relative">
+            
+            {/* Konten Judul */}
+            <h2 className="font-heading text-3xl font-bold text-amerta-blue leading-tight z-10">
+              Our Services
+            </h2>
+            <div className="amerta-line" />
+            <p className="font-body text-sm text-slate-600 leading-relaxed max-w-prose z-10">
+              Solusi teknologi komprehensif untuk membantu bisnis Anda...
+            </p>
+            <button className="amerta-btn-primary group">
+              <span className="tracking-wide">Consult</span>
+              <span className="text-2xl transition-transform group-hover:translate-x-2">→</span>
+            </button>
 
-        {/* KOLOM KANAN: List Cards */}
-        <div className="flex flex-col gap-6">
-          {services.map((service, index) => (
-            <div 
-              key={index}
-              className={`flex items-start gap-6 p-8 bg-white border-2 ${service.color} rounded-tl-[40px] rounded-br-[40px] rounded-tr-xl rounded-bl-xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300`}
-            >
-              {/* Icon Placeholder (Monitor + Gear) */}
-              <div className="flex-shrink-0 w-16 h-16 flex items-center justify-center border-2 border-slate-100 rounded-xl">
-                 <svg className="w-10 h-10 text-amerta-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                 </svg>
-              </div>
-
-              {/* Teks Service */}
-              <div>
-                <h3 className="font-heading text-2xl font-bold text-slate-900 mb-2">
-                  {service.title}
-                </h3>
-                <p className="font-body text-sm text-slate-500 leading-relaxed">
-                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-                </p>
+            {/* --- SUPERGRAPHIC --- */}
+            <div className="absolute top-1/2 left-192 -translate-y-1/2 pointer-events-none">
+              <div className="w-125 md:w-200 opacity-20 translate-x-20">
+                  <Image 
+                    src="/sg-5.png" 
+                    alt="" 
+                    width={500} 
+                    height={500} 
+                    className="rotate-180"
+                  />
               </div>
             </div>
-          ))}
-        </div>
+          </div>
 
+          {/* --- KOLOM KANAN (List Card) --- */}
+          <div className="flex flex-col gap-8">
+            {serviceList.map((service, index) => (
+              <div 
+                key={index} 
+                className="group p-12 bg-white rounded-[40px] border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-amerta-teal/20 transition-all duration-500 hover:-translate-y-2 relative overflow-hidden"
+              >
+                <div className="absolute top-0 left-0 w-2 h-full bg-linear-to-b from-amerta-teal to-amerta-blue opacity-0 group-hover:opacity-100 transition-opacity" />
+                <h3 className="text-2xl font-bold text-amerta-blue mb-4">{service.title}</h3>
+                <p className="text-slate-500">{service.desc}</p>
+              </div>
+            ))}
+          </div>
+
+        </div>
       </div>
     </section>
   );

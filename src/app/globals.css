@@ -17,6 +17,42 @@ html {
   --background-btn-gradient: linear-gradient(to right, #55bf95, #243f7d);
 }
 
+@layer components {
+  /* Class untuk konten yang sejajar rapi */
+  .amerta-container {
+    @apply container mx-auto px-6 md:px-12 lg:px-24;
+  }
+
+  /* Class untuk supergraphic yang nempel ke pinggir layar */
+  .supergraphic-bg {
+    @apply absolute pointer-events-none select-none z-0 opacity-40;
+  }
+
+  /* Garis Dekoratif Amerta */
+  .amerta-line {
+    @apply w-20 h-1.5 bg-linear-to-r from-amerta-teal to-amerta-blue rounded-full;
+  }
+
+  /* Button Amerta (Primary) */
+  .amerta-btn-primary {
+    @apply font-heading flex items-center gap-3 px-6 py-2 font-semibold text-white text-sm
+           bg-linear-to-r from-amerta-teal to-amerta-blue
+           rounded-tr-2xl rounded-bl-2xl
+           hover:scale-105 hover:shadow-lg hover:shadow-amerta-teal/30
+           transition-all duration-300 active:scale-95 ease-in-out cursor-pointer;
+  }
+
+  /* Slide yang lagi gak aktif / di belakang */
+  .portfolio-slide-inactive {
+    @apply scale-90 opacity-60 blur-[2px] transition-all duration-500;
+  }
+  
+  /* Slide yang aktif / di depan */
+  .portfolio-slide-active {
+    @apply scale-100 opacity-100 z-20 transition-all duration-500;
+  }
+}
+
 
 /* :root {
   --background: #ffffff;

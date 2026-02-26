@@ -1,95 +1,123 @@
 "use client";
+import React, { useState, useEffect, useCallback } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import Image from "next/image";
 
-import React, { useCallback } from 'react'
-import useEmblaCarousel from 'embla-carousel-react'
-import Image from 'next/image'
+const projects = [
+  { title: "E-Commerce App", category: "Mobile", img: "/about-image1.jpg" },
+  { title: "Banking Dashboard", category: "Web Design", img: "/about-image1.jpg" },
+  { title: "Travel Platform", category: "Web App", img: "/about-image1.jpg" },
+  { title: "Amerta Branding", category: "Graphic Design", img: "/about-image1.jpg" },
+  { title: "Logistics System", category: "Web App", img: "/about-image1.jpg" },
+];
 
 export default function Portfolio() {
-  // align: 'center' supaya yang aktif selalu di tengah
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true, 
-    align: 'center' 
-  })
+    align: "center", // Kartu aktif selalu di tengah
+    skipSnaps: false 
+  });
 
-  // Fungsi buat jalanin panah
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev()
-  }, [emblaApi])
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const scrollNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext()
-  }, [emblaApi])
+  // Logic buat update index saat slide geser
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
 
-  const projects = [
-    { id: 1, title: "Project Amerta 1", image: "/project1.jpg" },
-    { id: 2, title: "Project Amerta 2", image: "/project2.jpg" },
-    { id: 3, title: "Project Amerta 3", image: "/project3.jpg" },
-    { id: 4, title: "Project Amerta 4", image: "/project4.jpg" },
-    { id: 5, title: "Project Amerta 5", image: "/project1.jpg" },
-  ]
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+  }, [emblaApi, onSelect]);
+
+  // Fungsi buat tombol panah
+  const scrollPrev = () => emblaApi && emblaApi.scrollPrev();
+  const scrollNext = () => emblaApi && emblaApi.scrollNext();
 
   return (
-    <section className="py-20 bg-white overflow-hidden">
-      <div className="container mx-auto text-center relative px-10">
-        <h2 className="font-heading text-3xl font-extrabold text-amerta-blue mb-12">
-          Portfolio
-        </h2>
+    <section id="portfolio" className="relative w-full py-24 overflow-hidden">
+      <div className="amerta-container">
+        
+        {/* HEADER */}
+        <div className="flex flex-col items-center text-center mb-12 gap-6">
+          <h2 className="font-heading text-3xl font-bold text-amerta-blue leading-tight z-10">Portfolio</h2>
+          <div className="amerta-line" />
+        </div>
 
-        {/* CONTAINER UTAMA */}
-        <div className="relative max-w-4xl mx-auto">
+        {/* CAROUSEL WRAPPER */}
+        <div className="relative px-4">
           
           {/* TOMBOL PANAH KIRI */}
           <button 
             onClick={scrollPrev}
-            className="absolute left-[-50px] top-1/2 -translate-y-1/2 z-40 text-amerta-teal hover:scale-125 transition-all"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-14 h-14 bg-white/90 backdrop-blur-md shadow-xl rounded-full flex items-center justify-center text-amerta-blue hover:bg-amerta-teal hover:text-white transition-all active:scale-90"
           >
+            {/* <span className="text-2xl">←</span> */}
             <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
 
-          {/* VIEWPORT EMBLA */}
-          <div className="overflow-visible" ref={emblaRef}>
-            <div className="flex">
-              {projects.map((project) => (
-                <div 
-                  key={project.id} 
-                  /* TRIK NUMPUK: flex-basis kecil (200px) tapi margin negatif (-mx-10) */
-                  className="flex-[0_0_200px] md:flex-[0_0_260px] min-w-0 -mx-8 md:-mx-12 transition-all duration-500"
-                >
-                  <div className="group relative aspect-[3/4] rounded-[32px] overflow-hidden border-4 border-white shadow-xl transition-all duration-500 hover:scale-110 hover:z-50 opacity-40 hover:opacity-100 scale-90">
-                    <Image 
-                      src={project.image} 
-                      alt={project.title} 
-                      fill 
-                      className="object-cover" 
-                    />
-                    
-                    {/* INFO OVERLAY */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-amerta-blue/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                      <p className="font-heading text-white text-sm font-bold text-left">{project.title}</p>
+          {/* EMBLA VIEWPORT */}
+          <div className="embla overflow-visible" ref={emblaRef}>
+            <div className="embla__container flex -ml-10 md:-ml-20"> {/* Negative margin buat efek overlap */}
+              {projects.map((project, index) => {
+                const isActive = index === selectedIndex;
+                
+                return (
+                  <div 
+                    key={index} 
+                    className={`embla__slide flex-[0_0_70%] md:flex-[0_0_40%] lg:flex-[0_0_30%] min-w-0 pl-6 md:pl-8 transition-all duration-700 ease-in-out
+                      ${isActive 
+                        ? "z-20 scale-100 opacity-100 blur-none" 
+                        : "z-10 scale-85 opacity-30 blur-[2px]"
+                      }`}
+                  >
+                    <div className="relative aspect-square overflow-hidden rounded-4xl shadow-xl bg-slate-200">
+                      <Image 
+                        src={project.img} 
+                        alt={project.title} 
+                        fill 
+                        className="object-cover" 
+                      />
+                      
+                      {/* TEXT BOX - Selalu Muncul */}
+                      <div className="absolute inset-0 bg-linear-to-t from-amerta-blue/90 via-amerta-blue/20 to-transparent flex flex-col justify-end p-8 md:p-12">
+                        <div className={`transition-all duration-700 delay-100 ${isActive ? "opacity-100 translate-y-0" : "opacity-40 translate-y-4"}`}>
+                          <p className="text-amerta-teal font-semibold text-sm mb-1">
+                            {project.category}
+                          </p>
+                          <h3 className="text-white text-xl md:text-2xl font-bold">
+                            {project.title}
+                          </h3>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
           {/* TOMBOL PANAH KANAN */}
           <button 
             onClick={scrollNext}
-            className="absolute right-[-50px] top-1/2 -translate-y-1/2 z-40 text-amerta-teal hover:scale-125 transition-all"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-14 h-14 bg-white/90 backdrop-blur-md shadow-xl rounded-full flex items-center justify-center text-amerta-blue hover:bg-amerta-teal hover:text-white transition-all active:scale-90"
           >
             <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
-            </svg>
+               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+             </svg>
           </button>
-
         </div>
-        <button className="mt-12 px-8 py-2 border-2 border-amerta-teal text-amerta-teal font-bold rounded-full text-xs uppercase tracking-widest hover:bg-amerta-teal hover:text-white transition-all">
-          See All Projects
-        </button>
+        <div className="flex flex-col items-center text-center mt-12">
+          <button className="amerta-btn-primary group">
+            <span className="tracking-wide">More projects</span>
+            <span className="text-2xl transition-transform group-hover:translate-x-2">→</span>
+          </button>
+        </div>
       </div>
     </section>
-  )
+  );
 }
